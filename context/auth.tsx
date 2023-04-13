@@ -14,20 +14,20 @@ function useProtectedRoute(user) {
   const router = useRouter();
 
   React.useEffect(() => {
-    const inLoggedoutGroup = segments[0] === "(loggedout)";
+    const needsUser = segments[0] === "workspaces";
+    const onLogin = segments[0] === "login";
 
-    if (
-      // If the user is not signed in and the initial segment is not anything in the auth group.
-      !user &&
-      !inLoggedoutGroup
-    ) {
+    let toRender = true;
+    if (!user && needsUser) {
       // Redirect to the login page.
       router.replace("/login");
-    } else if (user && inLoggedoutGroup) {
+      toRender = false;
+    } else if (user && onLogin) {
       // Redirect away from the login page.
-      // TODO: if more than one loggedout page, check specifically for /login
-      router.replace("/");
+      router.replace("/workspaces");
+      toRender = false;
     }
+    // otherwise, show current page
   }, [user, segments]);
 }
 
