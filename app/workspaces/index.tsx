@@ -1,5 +1,4 @@
 import { Text, View } from "react-native";
-
 import { useAuth } from "../../lib/context/auth";
 
 export default function Index() {
