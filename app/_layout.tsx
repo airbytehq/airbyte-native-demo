@@ -1,5 +1,5 @@
 import { Slot } from "expo-router";
-import { AuthProvider } from "../context/auth";
+import { AuthProvider } from "../lib/context/auth";
 
 export default function Root() {
   return (
