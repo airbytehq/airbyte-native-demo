@@ -1,6 +1,12 @@
 import { useRouter, useSegments } from "expo-router";
 import React from "react";
-import { AuthContextType, CurrentUser } from "../types/auth";
+import { CurrentUser } from "../api/login";
+
+export type AuthContextType = {
+  user: CurrentUser;
+  signIn: (user: CurrentUser) => void;
+  signOut: () => void;
+};
 
 const AuthContext = React.createContext<AuthContextType>(null);
 
