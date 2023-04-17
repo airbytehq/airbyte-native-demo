@@ -28,6 +28,7 @@ export default function Login() {
       <Input
         placeholder="Airbyte API Key"
         leftIcon={{ type: "font-awesome", name: "sign-in" }}
+        secureTextEntry={true}
         value={apiKeyValue}
         onChangeText={setApiKeyValue}
         errorMessage={errorMessage}
