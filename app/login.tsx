@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { useAuth } from "../lib/context/auth";
 import React from "react";
-import { LoginForm, checkLogin } from "../lib/api/login";
+import { LoginForm, checkAndStoreLogin } from "../lib/api/login";
 import { Button, Input } from "@rneui/themed";
 
 export default function Login() {
@@ -14,7 +14,7 @@ export default function Login() {
   async function submit(form: LoginForm) {
     setProcessing(true);
     setErrorMessage("");
-    const { user, error } = await checkLogin(form);
+    const { user, error } = await checkAndStoreLogin(form);
     if (user) {
       signIn(user);
     } else {

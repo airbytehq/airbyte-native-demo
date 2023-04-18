@@ -1,6 +1,6 @@
 import { useRouter, useSegments } from "expo-router";
 import React from "react";
-import { CurrentUser } from "../api/login";
+import { CurrentUser, clearLogin } from "../api/login";
 
 export type AuthContextType = {
   user: CurrentUser;
@@ -47,7 +47,10 @@ export function AuthProvider(props) {
     <AuthContext.Provider
       value={{
         signIn: (user: CurrentUser) => setAuth(user),
-        signOut: () => setAuth(null),
+        signOut: () => {
+          clearLogin();
+          setAuth(null);
+        },
         user,
       }}
     >
