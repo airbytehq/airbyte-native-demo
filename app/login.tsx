@@ -3,9 +3,11 @@ import { useAuth } from "../lib/context/auth";
 import React from "react";
 import { LoginForm, checkAndStoreLogin } from "../lib/api/login";
 import { Button, Input } from "@rneui/themed";
+import { useProgress } from "../lib/context/progress";
 
 export default function Login() {
   const { signIn } = useAuth();
+  const { showActivity } = useProgress();
 
   const [processing, setProcessing] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
@@ -13,6 +15,7 @@ export default function Login() {
 
   async function submit(form: LoginForm) {
     setProcessing(true);
+    showActivity(true);
     setErrorMessage("");
     const { user, error } = await checkAndStoreLogin(form);
     if (user) {
@@ -20,6 +23,7 @@ export default function Login() {
     } else {
       setErrorMessage(error?.message || "Problem logging in");
     }
+    showActivity(false);
     setProcessing(false);
   }
 
