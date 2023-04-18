@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useAuth } from "../lib/context/auth";
 import React from "react";
 import { LoginForm, checkAndStoreLogin } from "../lib/api/login";
@@ -28,7 +28,7 @@ export default function Login() {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={styles.container}>
       <Input
         placeholder="Airbyte API Key"
         leftIcon={{ type: "font-awesome", name: "sign-in" }}
@@ -36,9 +36,11 @@ export default function Login() {
         value={apiKeyValue}
         onChangeText={setApiKeyValue}
         errorMessage={errorMessage}
+        errorStyle={styles.errorMessage}
         disabled={processing}
       ></Input>
       <Button
+        style={styles.button}
         disabled={processing}
         onPress={() => submit({ apiKey: apiKeyValue })}
       >
@@ -47,3 +49,16 @@ export default function Login() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginTop: 100,
+  },
+  errorMessage: {},
+  button: {
+    marginTop: 20,
+  },
+});

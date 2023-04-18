@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { autoloadOnStartup } from "../lib/api/login";
@@ -25,8 +25,16 @@ export default function Index() {
   }, []);
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={styles.container}>
       <Text>Airbyte Logo</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
