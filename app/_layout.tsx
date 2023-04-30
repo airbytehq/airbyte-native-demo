@@ -2,7 +2,7 @@ import { Slot, useRouter, useNavigation, useSegments } from "expo-router";
 import { Header as HeaderRNE, Icon } from "@rneui/themed";
 import { AuthProvider, useAuth } from "../lib/context/auth";
 import { ProgressProvider } from "../lib/context/progress";
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 export default function Root() {
   return (
