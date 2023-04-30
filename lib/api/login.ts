@@ -1,24 +1,14 @@
-import axios, { AxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
-import { getClient } from "./client";
+import { getClient, ApiResult, CurrentUser, processError } from "./client";
 
 const SECURE_API_KEY = "apiKey";
-
-export interface CurrentUser {
-  apiKey: string;
-}
 
 export interface LoginForm {
   apiKey: string;
 }
 
-export interface Error {
-  message: string;
-}
-
-export interface LoginFormResult {
-  user?: CurrentUser | null;
-  error?: Error | null;
+export interface LoginFormResult extends ApiResult {
+  user?: CurrentUser;
 }
 
 export async function checkAndStoreLogin(
@@ -38,15 +28,7 @@ export async function checkAndStoreLogin(
       return { error };
     }
   } catch (err: any) {
-    if (axios.isAxiosError(err)) {
-      const axiosErr = <AxiosError>err;
-      if (axiosErr?.response?.status === 401) {
-        return { error: { message: "Unknown API Key" } };
-      }
-    }
-
-    const error = { message: err?.message || "Error logging in" };
-    return { error };
+    return processError(err, "Error logging in");
   }
 }
 

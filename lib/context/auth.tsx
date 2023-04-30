@@ -1,9 +1,10 @@
 import { useRouter, useSegments } from "expo-router";
 import React from "react";
-import { CurrentUser, clearLogin } from "../api/login";
+import { clearLogin } from "../api/login";
+import { CurrentUser } from "../api/client";
 
 export type AuthContextType = {
-  user: CurrentUser;
+  currentUser: CurrentUser;
   signIn: (user: CurrentUser) => void;
   signOut: () => void;
 };
@@ -51,7 +52,7 @@ export function AuthProvider(props) {
           clearLogin();
           setAuth(null);
         },
-        user,
+        currentUser: user,
       }}
     >
       {props.children}

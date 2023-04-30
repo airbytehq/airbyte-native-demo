@@ -35,11 +35,11 @@ export function ProgressProvider(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
   },
   slot: {
     flex: 1,
     flexDirection: "column",
+    alignItems: "stretch",
   },
   progress: {
     position: "absolute",

@@ -1,7 +1,22 @@
-import axios, { AxiosInstance, CreateAxiosDefaults } from "axios";
-import { CurrentUser } from "./login";
+import axios, { AxiosError, AxiosInstance, CreateAxiosDefaults } from "axios";
 
 export const HOST_URL = "https://api.airbyte.com";
+
+export interface Error {
+  message: string;
+}
+
+export interface CurrentUser {
+  apiKey: string;
+}
+
+export interface ApiInput {
+  currentUser: CurrentUser;
+}
+
+export interface ApiResult {
+  error?: Error;
+}
 
 export function getClient(user?: CurrentUser): AxiosInstance {
   const info: CreateAxiosDefaults = {
@@ -45,4 +60,15 @@ export function getClient(user?: CurrentUser): AxiosInstance {
   );
 
   return instance;
+}
+
+export function processError(err: any, defaultMessage: string) {
+  if (axios.isAxiosError(err)) {
+    const axiosErr = <AxiosError>err;
+    if (axiosErr?.response?.status === 401) {
+      return { error: { message: "Unknown API Key" } };
+    }
+  }
+  const error = { message: err?.message || defaultMessage };
+  return { error };
 }
