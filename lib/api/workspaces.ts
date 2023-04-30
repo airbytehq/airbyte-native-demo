@@ -18,10 +18,10 @@ export async function getWorkspaces(
   const client = getClient(input.currentUser);
 
   try {
-    const response: { data: WorkspaceMeta[] } = await client.get(
+    const response: { data: { data: WorkspaceMeta[] } } = await client.get(
       "/v1/workspaces"
     );
-    return { workspaces: response.data };
+    return { workspaces: response.data.data };
   } catch (err: any) {
     return processError(err, "Error getting workspaces");
   }

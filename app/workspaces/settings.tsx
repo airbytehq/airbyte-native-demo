@@ -1,25 +1,22 @@
 import { StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../../lib/context/auth";
 import { Button } from "@rneui/themed";
+import { Container } from "../../lib/components/Container";
 
 export default function Settings() {
   const { signOut, currentUser } = useAuth();
   return (
-    <View style={styles.container}>
+    <Container>
       <Button style={styles.button} onPress={() => signOut()}>
         Sign Out
       </Button>
       <Text>{currentUser?.apiKey}</Text>
-    </View>
+      <Text>{currentUser?.apiKey}</Text>
+    </Container>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   button: {
     margin: 20,
   },

@@ -10,13 +10,7 @@ export default function Root() {
       <ProgressProvider>
         <View style={styles.container}>
           <MyHeader />
-          <ScrollView
-            alwaysBounceVertical={false}
-            alwaysBounceHorizontal={false}
-            style={styles.scroll}
-          >
-            <Slot />
-          </ScrollView>
+          <Slot />
         </View>
       </ProgressProvider>
     </AuthProvider>
@@ -72,11 +66,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     alignItems: "stretch",
-  },
-  scroll: {},
-  slot: {
-    flex: 1,
-    justifyContent: "center",
   },
   header: {
     backgroundColor: "green",

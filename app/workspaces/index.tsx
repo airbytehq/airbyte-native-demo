@@ -3,6 +3,7 @@ import { useAuth } from "../../lib/context/auth";
 import { useEffect, useState } from "react";
 import { WorkspaceMeta, getWorkspaces } from "../../lib/api/workspaces";
 import { ListItem } from "@rneui/themed";
+import { Container } from "../../lib/components/Container";
 
 export default function Index() {
   const { currentUser } = useAuth();
@@ -10,34 +11,28 @@ export default function Index() {
 
   useEffect(() => {
     getWorkspaces({ currentUser }).then((response) => {
+      console.log(response.workspaces);
       setTableData(response.workspaces);
     });
   }, []);
 
   return (
-    <View style={styles.container}>
+    <Container hasScroll={true}>
       <FlatList<WorkspaceMeta>
         data={tableData}
-        keyExtractor={(item) => {
-          return item.workspaceId;
-        }}
+        keyExtractor={(item) => item.workspaceId}
         renderItem={({ item }) => (
-          <ListItem>
+          <ListItem bottomDivider>
             <ListItem.Content>
               <ListItem.Title>{item.name}</ListItem.Title>
               <ListItem.Subtitle>{item.dataResidency}</ListItem.Subtitle>
             </ListItem.Content>
+            <ListItem.Chevron />
           </ListItem>
         )}
       />
-    </View>
+    </Container>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-});
+const styles = StyleSheet.create({});

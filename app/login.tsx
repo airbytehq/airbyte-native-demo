@@ -4,6 +4,7 @@ import React from "react";
 import { LoginForm, checkAndStoreLogin } from "../lib/api/login";
 import { Button, Input } from "@rneui/themed";
 import { useProgress } from "../lib/context/progress";
+import { Container } from "../lib/components/Container";
 
 export default function Login() {
   const { signIn } = useAuth();
@@ -28,7 +29,7 @@ export default function Login() {
   }
 
   return (
-    <View style={styles.container}>
+    <Container>
       <Input
         placeholder="Airbyte API Key"
         leftIcon={{ type: "font-awesome", name: "sign-in" }}
@@ -46,17 +47,11 @@ export default function Login() {
       >
         Connect
       </Button>
-    </View>
+    </Container>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    marginTop: 100,
-  },
   errorMessage: {},
   button: {
     marginTop: 20,
