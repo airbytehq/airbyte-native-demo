@@ -19,7 +19,11 @@ export default function Index() {
   }, []);
 
   return (
-    <Container hasScroll={true} loading={tableData === undefined}>
+    <Container
+      title="Workspaces"
+      hasScroll={true}
+      loading={tableData === undefined}
+    >
       <FlatList<WorkspaceMeta>
         data={tableData || []}
         keyExtractor={(item) => item.workspaceId}
