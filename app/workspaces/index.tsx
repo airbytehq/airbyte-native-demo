@@ -27,7 +27,7 @@ export default function Index() {
           <ListItem
             bottomDivider
             onPress={() => {
-              router.push(currentPath + "/" + item.workspaceId);
+              router.push(`${currentPath}/${item.workspaceId}/connections`);
             }}
           >
             <ListItem.Content>
