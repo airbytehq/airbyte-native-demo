@@ -7,19 +7,18 @@ import { Container } from "../../lib/components/Container";
 
 export default function Index() {
   const { currentUser } = useAuth();
-  const [tableData, setTableData] = useState<WorkspaceMeta[]>([]);
+  const [tableData, setTableData] = useState<WorkspaceMeta[]>(undefined);
 
   useEffect(() => {
     getWorkspaces({ currentUser }).then((response) => {
-      console.log(response.workspaces);
       setTableData(response.workspaces);
     });
   }, []);
 
   return (
-    <Container hasScroll={true}>
+    <Container hasScroll={true} loading={tableData === undefined}>
       <FlatList<WorkspaceMeta>
-        data={tableData}
+        data={tableData || []}
         keyExtractor={(item) => item.workspaceId}
         renderItem={({ item }) => (
           <ListItem bottomDivider>
