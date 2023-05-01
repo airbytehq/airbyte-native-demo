@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { PropsWithChildren, useEffect } from "react";
-import { Text, useTheme } from "@rneui/themed";
+import { Text } from "@rneui/themed";
 import {
   useRouter,
   useNavigation,
@@ -100,18 +100,8 @@ function MyHeader(props: MyHeaderProps) {
 }
 
 function ProgressBar() {
-  const { isProcessing, watchActivity, unwatchActivity } = useProgress();
-  const { theme } = useTheme();
+  const { isProcessing } = useProgress();
 
-  useEffect(() => {
-    function onChange(processing: boolean) {
-      console.log("processing", processing);
-    }
-    watchActivity(onChange);
-    return () => unwatchActivity(onChange);
-  }, []);
-
-  console.log("inline", isProcessing);
   if (isProcessing) {
     return <LinearProgress color="primary" style={styles.progress} />;
   } else {
