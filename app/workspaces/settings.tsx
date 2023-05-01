@@ -2,7 +2,6 @@ import { StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../../lib/context/auth";
 import { Button } from "@rneui/themed";
 import { Container } from "../../lib/components/Container";
-import { usePage } from "../../lib/context/page";
 
 export default function Settings() {
   const { signOut, currentUser } = useAuth();
