@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { PropsWithChildren } from "react";
-import { Text } from "@rneui/themed";
+import { PropsWithChildren, useEffect } from "react";
+import { Text, useTheme } from "@rneui/themed";
 import {
   useRouter,
   useNavigation,
@@ -9,11 +9,8 @@ import {
 } from "expo-router";
 import { Header as HeaderRNE, Icon } from "@rneui/themed";
 import { useAuth } from "../context/auth";
-import { createNavigationContainerRef } from "@react-navigation/native";
-
-type Router = ReturnType<typeof useRouter>;
-
-const navigationRef = createNavigationContainerRef();
+import { useProgress } from "../context/progress";
+import { LinearProgress } from "@rneui/themed";
 
 export type ParentContainerProps = {
   title?: string;
@@ -51,6 +48,7 @@ export function Container(props: PropsWithChildren<ParentContainerProps>) {
   return (
     <View style={styles.container}>
       <MyHeader title={title} />
+      <ProgressBar />
       <Main {...props}>{props.children}</Main>
     </View>
   );
@@ -101,6 +99,26 @@ function MyHeader(props: MyHeaderProps) {
   );
 }
 
+function ProgressBar() {
+  const { isProcessing, watchActivity, unwatchActivity } = useProgress();
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    function onChange(processing: boolean) {
+      console.log("processing", processing);
+    }
+    watchActivity(onChange);
+    return () => unwatchActivity(onChange);
+  }, []);
+
+  console.log("inline", isProcessing);
+  if (isProcessing) {
+    return <LinearProgress color="primary" style={styles.progress} />;
+  } else {
+    return <View style={[styles.progress, { backgroundColor: "#2089dc" }]} />;
+  }
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -128,6 +146,13 @@ const styles = StyleSheet.create({
   headerLeft: {
     display: "flex",
     flexDirection: "row",
+  },
+  // progress
+  progress: {
+    position: "relative",
+    top: -3,
+    height: 5,
+    marginBottom: -3,
   },
   // main
   loading: {

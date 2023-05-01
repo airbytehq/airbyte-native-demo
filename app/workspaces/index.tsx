@@ -5,16 +5,20 @@ import { WorkspaceMeta, getWorkspaces } from "../../lib/api/workspaces";
 import { ListItem } from "@rneui/themed";
 import { Container } from "../../lib/components/Container";
 import { usePathname, useRouter } from "expo-router";
+import { useProgress } from "../../lib/context/progress";
 
 export default function Index() {
   const { currentUser } = useAuth();
   const router = useRouter();
+  const { showActivity } = useProgress();
   const currentPath = usePathname();
   const [tableData, setTableData] = useState<WorkspaceMeta[]>(undefined);
 
   useEffect(() => {
+    showActivity(true);
     getWorkspaces({ currentUser }).then((response) => {
       setTableData(response.workspaces);
+      showActivity(false);
     });
   }, []);
 
@@ -45,5 +49,3 @@ export default function Index() {
     </Container>
   );
 }
-
-const styles = StyleSheet.create({});

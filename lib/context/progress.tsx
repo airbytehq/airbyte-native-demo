@@ -1,10 +1,12 @@
-import { LinearProgress } from "@rneui/base";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+
+export type ProgressCallback = (isProcessing: boolean) => void;
 
 export type ProgressContextType = {
   isProcessing: boolean;
   showActivity: (isProcessing: boolean) => void;
+  watchActivity: (callback: ProgressCallback) => void;
+  unwatchActivity: (callback: ProgressCallback) => void;
 };
 
 const ProgressContext = React.createContext<ProgressContextType>(null);
@@ -16,33 +18,27 @@ export function useProgress() {
 
 export function ProgressProvider(props) {
   const [progress, setProgress] = React.useState(false);
-
+  const callbacks = new Set<ProgressCallback>();
   return (
     <ProgressContext.Provider
       value={{
-        showActivity: (processing: boolean) => setProgress(processing),
+        showActivity: (processing: boolean) => {
+          // TODO: we could increment and decrement here
+          setProgress(processing);
+          for (const cb of callbacks) {
+            cb(processing);
+          }
+        },
         isProcessing: progress,
+        watchActivity: (callback: ProgressCallback) => {
+          callbacks.add(callback);
+        },
+        unwatchActivity: (callback: ProgressCallback) => {
+          callbacks.delete(callback);
+        },
       }}
     >
-      <View style={styles.container}>
-        {progress && <LinearProgress color="primary" style={styles.progress} />}
-        <View style={styles.slot}>{props.children}</View>
-      </View>
+      {props.children}
     </ProgressContext.Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  slot: {
-    flex: 1,
-    flexDirection: "column",
-    alignItems: "stretch",
-  },
-  progress: {
-    position: "absolute",
-    top: 30, // TODO height of bar
-  },
-});
