@@ -8,6 +8,11 @@ import {
 import { Header as HeaderRNE, Icon } from "@rneui/themed";
 import { useAuth } from "./auth";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { createNavigationContainerRef } from "@react-navigation/native";
+
+type Router = ReturnType<typeof useRouter>;
+
+const navigationRef = createNavigationContainerRef();
 
 export type PageContextType = {
   setTitle: (title: string) => void;
@@ -23,13 +28,18 @@ export function usePage() {
 export function PageProvider(props) {
   const router = useRouter();
   const params = useSearchParams();
+
   const title =
     params.title === undefined ? "Airbyte" : params.title.toString();
 
   return (
     <PageContext.Provider
       value={{
-        setTitle: (update: string) => router.setParams({ title: update }),
+        setTitle: (update: string) => {
+          try {
+            router.setParams({ title: update });
+          } catch (err: any) {}
+        },
       }}
     >
       <View style={styles.container}>
@@ -38,6 +48,13 @@ export function PageProvider(props) {
       </View>
     </PageContext.Provider>
   );
+}
+
+function setDefensiveTitle(router: Router, update: string) {
+  if (navigationRef?.current?.isReady()) {
+    router.setParams({ title: update });
+  } else {
+  }
 }
 
 type MyHeaderProps = {
@@ -54,8 +71,6 @@ function MyHeader(props: MyHeaderProps) {
   return (
     <HeaderRNE
       style={styles.headerParent}
-      // TODO: make it a profile menu and then sign out from there
-      // icon: user
       leftComponent={
         <View style={styles.headerLeft}>
           {nav.canGoBack() && (

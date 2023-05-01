@@ -5,7 +5,7 @@ import { Text } from "@rneui/themed";
 export default function Connections() {
   const { workspaceId } = useSearchParams();
   return (
-    <Container>
+    <Container title="Connections">
       <Text>Connections: {workspaceId}</Text>
     </Container>
   );
