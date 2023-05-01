@@ -24,7 +24,7 @@ export default function Index() {
 
   return (
     <Container
-      title="Workspaces"
+      defaultTitle="Workspaces"
       hasScroll={true}
       loading={tableData === undefined}
     >
@@ -35,7 +35,9 @@ export default function Index() {
           <ListItem
             bottomDivider
             onPress={() => {
-              router.push(`${currentPath}/${item.workspaceId}/connections`);
+              const pathname = `${currentPath}/${item.workspaceId}/connections`;
+              const params = { title: item.name };
+              router.push({ pathname, params });
             }}
           >
             <ListItem.Content>

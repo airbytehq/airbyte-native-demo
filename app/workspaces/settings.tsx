@@ -6,7 +6,7 @@ import { Container } from "../../lib/components/Container";
 export default function Settings() {
   const { signOut, currentUser } = useAuth();
   return (
-    <Container title="Settings">
+    <Container defaultTitle="Settings">
       <Button style={styles.button} onPress={() => signOut()}>
         Sign Out
       </Button>

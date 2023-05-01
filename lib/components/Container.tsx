@@ -14,6 +14,7 @@ import { LinearProgress } from "@rneui/themed";
 
 export type ParentContainerProps = {
   title?: string;
+  defaultTitle?: string;
   hasScroll?: boolean;
   loading?: boolean;
 };
@@ -43,7 +44,12 @@ export function Main(props: PropsWithChildren<ParentContainerProps>) {
 export function Container(props: PropsWithChildren<ParentContainerProps>) {
   const params = useSearchParams();
 
-  const title: string = (params.title || props.title || "Airbyte").toString();
+  const title: string = (
+    props.title ||
+    params.title ||
+    props.defaultTitle ||
+    "Airbyte"
+  ).toString();
 
   return (
     <View style={styles.container}>
