@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { PropsWithChildren, useEffect } from "react";
 import { Text } from "@rneui/themed";
-import { Stack, useSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { useProgress } from "../context/progress";
 import { LinearProgress } from "@rneui/themed";
 
@@ -35,7 +35,7 @@ export function Main(props: PropsWithChildren<ParentContainerProps>) {
 }
 
 export function Container(props: PropsWithChildren<ParentContainerProps>) {
-  const params = useSearchParams();
+  const params = useLocalSearchParams();
 
   const title: string = (
     props.title ||

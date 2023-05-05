@@ -1,18 +1,17 @@
 import { FlatList, StyleSheet, View } from "react-native";
 import { useAuth } from "../../lib/context/auth";
 import { useEffect, useState } from "react";
-import { WorkspaceMeta, getWorkspaces } from "../../lib/api/workspaces";
+import { Workspace, getWorkspaces } from "../../lib/api/workspaces";
 import { ListItem } from "@rneui/themed";
 import { Container } from "../../lib/components/Container";
-import { usePathname, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useProgress } from "../../lib/context/progress";
 
 export default function Index() {
   const { currentUser } = useAuth();
   const router = useRouter();
   const { showActivity } = useProgress();
-  const currentPath = usePathname();
-  const [tableData, setTableData] = useState<WorkspaceMeta[]>(undefined);
+  const [tableData, setTableData] = useState<Workspace[]>(undefined);
 
   useEffect(() => {
     showActivity(true);
@@ -28,14 +27,14 @@ export default function Index() {
       hasScroll={true}
       loading={tableData === undefined}
     >
-      <FlatList<WorkspaceMeta>
+      <FlatList<Workspace>
         data={tableData || []}
         keyExtractor={(item) => item.workspaceId}
         renderItem={({ item }) => (
           <ListItem
             bottomDivider
             onPress={() => {
-              const pathname = `${currentPath}/${item.workspaceId}/connections`;
+              const pathname = `/workspaces/${item.workspaceId}/connections`;
               const params = { title: item.name };
               router.push({ pathname, params });
             }}
