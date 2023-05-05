@@ -1,4 +1,4 @@
-import { useRouter, useSegments } from "expo-router";
+import { useNavigation, useRouter, useSegments } from "expo-router";
 import React from "react";
 import { clearLogin } from "../api/login";
 import { CurrentUser } from "../api/client";
@@ -43,6 +43,7 @@ export function AuthProvider(props) {
   const [user, setAuth] = React.useState<CurrentUser | null>(null);
 
   useProtectedRoute(user);
+  const nav = useNavigation();
 
   return (
     <AuthContext.Provider
@@ -51,6 +52,7 @@ export function AuthProvider(props) {
         signOut: () => {
           clearLogin();
           setAuth(null);
+          nav.dispatch({ type: "POP_TO_TOP" });
         },
         currentUser: user,
       }}
