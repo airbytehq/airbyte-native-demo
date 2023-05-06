@@ -1,4 +1,4 @@
-import { Slot, useNavigation, useRouter, useSegments } from "expo-router";
+import { useNavigation, useRouter, useSegments } from "expo-router";
 import { AuthProvider, useAuth } from "../lib/context/auth";
 import { ProgressProvider } from "../lib/context/progress";
 import { Stack } from "expo-router";
@@ -34,7 +34,7 @@ function HeaderLeft() {
             router.back();
           }}
         >
-          <Icon type="font-awesome" color="white" name="chevron-left" />
+          <Icon type="font-awesome-5" color="white" name="chevron-left" />
         </TouchableOpacity>
       )}
     </View>
@@ -56,7 +56,7 @@ function HeaderRight() {
             router.push("/workspaces/settings");
           }}
         >
-          <Icon type="font-awesome" color="white" name="user" />
+          <Icon type="font-awesome-5" color="white" name="user" />
         </TouchableOpacity>
       )}
     </View>

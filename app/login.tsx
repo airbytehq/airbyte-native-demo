@@ -32,7 +32,7 @@ export default function Login() {
     <Container>
       <Input
         placeholder="Airbyte API Key"
-        leftIcon={{ type: "font-awesome", name: "sign-in" }}
+        leftIcon={{ type: "font-awesome-5", name: "sign-in-alt" }}
         secureTextEntry={true}
         value={apiKeyValue}
         onChangeText={setApiKeyValue}

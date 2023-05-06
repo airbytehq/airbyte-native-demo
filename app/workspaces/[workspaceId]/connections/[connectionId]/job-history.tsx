@@ -5,8 +5,8 @@ import { Text } from "@rneui/themed";
 export default function Status() {
   const { workspaceId, connectionId } = useLocalSearchParams();
   return (
-    <Container defaultTitle="Connection">
-      <Text>Status: {connectionId}</Text>
+    <Container defaultTitle="Syncs">
+      <Text>Syncs: {connectionId}</Text>
     </Container>
   );
 }

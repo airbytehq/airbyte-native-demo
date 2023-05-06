@@ -37,7 +37,7 @@ export default function Connections() {
             bottomDivider
             onPress={() => {
               const pathname = `/workspaces/${item.workspaceId}/connections/${item.connectionId}/status`;
-              const params = { title: item.name };
+              const params = {};
               router.push({ pathname, params });
             }}
           >

@@ -4,11 +4,14 @@ import { Text } from "@rneui/themed";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useProgress } from "../context/progress";
 import { LinearProgress } from "@rneui/themed";
+import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 
 export type ParentContainerProps = {
   title?: string;
   defaultTitle?: string;
   hasScroll?: boolean;
+  navigator?: boolean;
+  inTabs?: boolean;
   loading?: boolean;
 };
 
@@ -19,7 +22,7 @@ export function Main(props: PropsWithChildren<ParentContainerProps>) {
         <Text>Loading</Text>
       </View>
     );
-  } else if (props.hasScroll) {
+  } else if (props.hasScroll || props.navigator) {
     return <View style={styles.hasScroll}>{props.children}</View>;
   } else {
     return (
@@ -37,17 +40,21 @@ export function Main(props: PropsWithChildren<ParentContainerProps>) {
 export function Container(props: PropsWithChildren<ParentContainerProps>) {
   const params = useLocalSearchParams();
 
-  const title: string = (
-    props.title ||
-    params.title ||
-    props.defaultTitle ||
-    "Airbyte"
-  ).toString();
+  const options: NativeStackNavigationOptions = {};
+  if (!props.inTabs) {
+    const title: string = (
+      props.title ||
+      params.title ||
+      props.defaultTitle ||
+      "Airbyte"
+    ).toString();
+    options.title = title;
+  }
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title }} />
-      <ProgressBar />
+      <Stack.Screen options={options} />
+      {!props.inTabs && <ProgressBar />}
       <Main {...props}>{props.children}</Main>
     </View>
   );
