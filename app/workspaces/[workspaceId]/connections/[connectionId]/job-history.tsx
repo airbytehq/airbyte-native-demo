@@ -3,7 +3,7 @@ import { Container } from "../../../../../lib/components/Container";
 import { Text } from "@rneui/themed";
 
 export default function Status() {
-  const { workspaceId, connectionId } = useLocalSearchParams();
+  const connectionId = useLocalSearchParams().connectionId.toString();
   return (
     <Container defaultTitle="Syncs">
       <Text>Syncs: {connectionId}</Text>

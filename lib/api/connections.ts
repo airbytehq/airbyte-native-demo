@@ -3,6 +3,16 @@ import { ApiInput, ApiResult, getClient, processError } from "./client";
 export interface GetConnectionsInput extends ApiInput {
   workspaceId: string;
 }
+export interface GetConnectionsResult extends ApiResult {
+  connections?: ConnectionApiData[];
+}
+
+export interface GetConnectionInput extends ApiInput {
+  connectionId: string;
+}
+export interface GetConnectionResult extends ApiResult {
+  connection?: ConnectionApiData;
+}
 
 export interface ScheduleApiData {
   scheduleType: "manual" | "cron" | "basic";
@@ -25,10 +35,6 @@ export interface ConnectionApiData {
   prefix?: string;
 }
 
-export interface GetConnectionsResult extends ApiResult {
-  connections?: ConnectionApiData[];
-}
-
 export async function getConnections(
   input: GetConnectionsInput
 ): Promise<GetConnectionsResult> {
@@ -41,6 +47,22 @@ export async function getConnections(
     );
     return { connections: response.data.data };
   } catch (err: any) {
-    return processError(err, "Error getting workspaces");
+    return processError(err, "Error getting connections");
+  }
+}
+
+export async function getConnection(
+  input: GetConnectionInput
+): Promise<GetConnectionResult> {
+  const client = getClient(input.currentUser);
+
+  try {
+    const response: { data: ConnectionApiData } = await client.get(
+      `/v1/connections/${input.connectionId}`,
+      { params: {} }
+    );
+    return { connection: response.data };
+  } catch (err: any) {
+    return processError(err, "Error getting connection");
   }
 }
