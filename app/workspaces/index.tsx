@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList } from "react-native";
 import { useAuth } from "../../lib/context/auth";
 import { useEffect, useState } from "react";
 import { WorkspaceApiData, getWorkspaces } from "../../lib/api/workspaces";
