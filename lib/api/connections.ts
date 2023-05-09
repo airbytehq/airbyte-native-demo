@@ -4,20 +4,20 @@ export interface GetConnectionsInput extends ApiInput {
   workspaceId: string;
 }
 
-export interface ScheduleData {
+export interface ScheduleApiData {
   scheduleType: "manual" | "cron" | "basic";
   cronExpression?: string;
   basicTiming?: string;
 }
 
-interface ConnectionData {
+export interface ConnectionApiData {
   connectionId: string;
   name: string;
   sourceId: string;
   destinationId: string;
   workspaceId: string;
   status: "active" | "inactive" | "deprecated";
-  schedule: ScheduleData;
+  schedule: ScheduleApiData;
   dataResidency: "auto" | "us" | "eu";
   NonBreakingSchemaUpdatesBehavior?: "ignore" | "disable_connection";
   namespaceDefinition?: "source" | "destination" | "custom_format";
@@ -25,10 +25,8 @@ interface ConnectionData {
   prefix?: string;
 }
 
-export interface Connection extends ConnectionData {}
-
 export interface GetConnectionsResult extends ApiResult {
-  connections?: Connection[];
+  connections?: ConnectionApiData[];
 }
 
 export async function getConnections(
@@ -37,7 +35,7 @@ export async function getConnections(
   const client = getClient(input.currentUser);
 
   try {
-    const response: { data: { data: ConnectionData[] } } = await client.get(
+    const response: { data: { data: ConnectionApiData[] } } = await client.get(
       "/v1/connections",
       { params: { limit: 1000, workspaceIds: input.workspaceId } }
     );

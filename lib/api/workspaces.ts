@@ -2,16 +2,14 @@ import { ApiInput, ApiResult, getClient, processError } from "./client";
 
 export interface GetWorkspacesInput extends ApiInput {}
 
-interface WorkspaceData {
+export interface WorkspaceApiData {
   workspaceId: string;
   name: string;
   dataResidency: "auto" | "us" | "eu";
 }
 
-export interface Workspace extends WorkspaceData {}
-
 export interface GetWorkspacesResult extends ApiResult {
-  workspaces?: Workspace[];
+  workspaces?: WorkspaceApiData[];
 }
 
 export async function getWorkspaces(
@@ -20,7 +18,7 @@ export async function getWorkspaces(
   const client = getClient(input.currentUser);
 
   try {
-    const response: { data: { data: WorkspaceData[] } } = await client.get(
+    const response: { data: { data: WorkspaceApiData[] } } = await client.get(
       "/v1/workspaces",
       { params: { limit: 1000 } }
     );

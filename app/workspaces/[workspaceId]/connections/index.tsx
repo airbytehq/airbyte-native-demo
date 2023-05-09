@@ -4,14 +4,17 @@ import { ListItem } from "@rneui/themed";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../../lib/context/auth";
 import { useProgress } from "../../../../lib/context/progress";
-import { Connection, getConnections } from "../../../../lib/api/connections";
+import {
+  ConnectionApiData,
+  getConnections,
+} from "../../../../lib/api/connections";
 import { FlatList } from "react-native";
 
 export default function Connections() {
   const { currentUser } = useAuth();
   const router = useRouter();
   const { showActivity } = useProgress();
-  const [tableData, setTableData] = useState<Connection[]>(undefined);
+  const [tableData, setTableData] = useState<ConnectionApiData[]>(undefined);
 
   const workspaceId = useLocalSearchParams().workspaceId.toString();
 
@@ -29,7 +32,7 @@ export default function Connections() {
       hasScroll={true}
       loading={tableData === undefined}
     >
-      <FlatList<Connection>
+      <FlatList<ConnectionApiData>
         data={tableData || []}
         keyExtractor={(item) => item.connectionId}
         renderItem={({ item }) => (

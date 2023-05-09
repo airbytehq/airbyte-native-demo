@@ -1,7 +1,7 @@
 import { FlatList, StyleSheet, View } from "react-native";
 import { useAuth } from "../../lib/context/auth";
 import { useEffect, useState } from "react";
-import { Workspace, getWorkspaces } from "../../lib/api/workspaces";
+import { WorkspaceApiData, getWorkspaces } from "../../lib/api/workspaces";
 import { ListItem } from "@rneui/themed";
 import { Container } from "../../lib/components/Container";
 import { useRouter } from "expo-router";
@@ -11,7 +11,7 @@ export default function Index() {
   const { currentUser } = useAuth();
   const router = useRouter();
   const { showActivity } = useProgress();
-  const [tableData, setTableData] = useState<Workspace[]>(undefined);
+  const [tableData, setTableData] = useState<WorkspaceApiData[]>(undefined);
 
   useEffect(() => {
     showActivity(true);
@@ -27,7 +27,7 @@ export default function Index() {
       hasScroll={true}
       loading={tableData === undefined}
     >
-      <FlatList<Workspace>
+      <FlatList<WorkspaceApiData>
         data={tableData || []}
         keyExtractor={(item) => item.workspaceId}
         renderItem={({ item }) => (
