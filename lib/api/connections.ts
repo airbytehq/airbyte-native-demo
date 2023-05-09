@@ -19,7 +19,7 @@ export interface ConnectionApiData {
   status: "active" | "inactive" | "deprecated";
   schedule: ScheduleApiData;
   dataResidency: "auto" | "us" | "eu";
-  NonBreakingSchemaUpdatesBehavior?: "ignore" | "disable_connection";
+  nonBreakingSchemaUpdatesBehavior?: "ignore" | "disable_connection";
   namespaceDefinition?: "source" | "destination" | "custom_format";
   namespaceFormat?: string;
   prefix?: string;
