@@ -50,19 +50,3 @@ export async function getConnections(
     return processError(err, "Error getting connections");
   }
 }
-
-export async function getConnection(
-  input: GetConnectionInput
-): Promise<GetConnectionResult> {
-  const client = getClient(input.currentUser);
-
-  try {
-    const response: { data: ConnectionApiData } = await client.get(
-      `/v1/connections/${input.connectionId}`,
-      { params: {} }
-    );
-    return { connection: response.data };
-  } catch (err: any) {
-    return processError(err, "Error getting connection");
-  }
-}

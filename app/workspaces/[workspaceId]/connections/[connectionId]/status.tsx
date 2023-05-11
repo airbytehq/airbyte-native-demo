@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../../../../lib/context/auth";
 import { useProgress } from "../../../../../lib/context/progress";
 import {
-  ConnectionApiData,
-  getConnection,
-} from "../../../../../lib/api/connections";
+  ConnectionDetailData,
+  getConnectionDetails,
+} from "../../../../../lib/api/connection";
 import { FlatList } from "react-native";
 
 export default function Status() {
@@ -17,20 +17,24 @@ export default function Status() {
   const { currentUser } = useAuth();
   const router = useRouter();
   const { showActivity } = useProgress();
-  const [item, setItem] = useState<ConnectionApiData>(undefined);
+  const [item, setItem] = useState<ConnectionDetailData>(undefined);
 
   useEffect(() => {
     showActivity(true);
-    getConnection({ currentUser, connectionId }).then((response) => {
-      setItem(response.connection);
+    getConnectionDetails({ currentUser, connectionId }).then((response) => {
+      setItem(response.details);
       showActivity(false);
     });
   }, []);
 
   return (
     <Container defaultTitle="Connection" loading={item === undefined}>
-      <Text>Name: {item?.name}</Text>
-      <Text>Status: {item?.status}</Text>
+      <Text>Name: {item?.connection?.name}</Text>
+      <Text>Status: {item?.connection?.status}</Text>
+      <Text>Last Job: {item?.info?.lastJobStatus}</Text>
+      <Text>Job Count: {item?.jobs?.length}</Text>
+      <Text>Source: {item?.source?.name}</Text>
+      <Text>Destination: {item?.destination?.name}</Text>
     </Container>
   );
 }
