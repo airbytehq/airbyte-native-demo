@@ -20,13 +20,14 @@ export interface ScheduleApiData {
   basicTiming?: string;
 }
 
+export type ConnectionApiStatus = "active" | "inactive" | "deprecated";
 export interface ConnectionApiData {
   connectionId: string;
   name: string;
   sourceId: string;
   destinationId: string;
   workspaceId: string;
-  status: "active" | "inactive" | "deprecated";
+  status: ConnectionApiStatus;
   schedule: ScheduleApiData;
   dataResidency: "auto" | "us" | "eu";
   nonBreakingSchemaUpdatesBehavior?: "ignore" | "disable_connection";

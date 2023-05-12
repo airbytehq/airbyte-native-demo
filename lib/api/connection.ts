@@ -16,15 +16,16 @@ export interface DestinationApiData {
   workspaceId: string;
 }
 
+export type JobApiStatus =
+  | "pending"
+  | "running"
+  | "incomplete"
+  | "failed"
+  | "succeeded"
+  | "cancelled";
 export interface JobApiData {
   jobId: number;
-  status:
-    | "pending"
-    | "running"
-    | "incomplete"
-    | "failed"
-    | "succeeded"
-    | "cancelled";
+  status: JobApiStatus;
   jobType: "sync" | "reset";
   startTime: string;
   lastUpdatedAt: string;
@@ -35,7 +36,7 @@ export interface JobApiData {
 
 export interface ConnectionCalculatedData {
   enabled: boolean;
-  lastJobStatus: string;
+  lastJobStatus: JobApiStatus;
   currentlyRunning: boolean;
 }
 
@@ -68,7 +69,7 @@ export async function getConnectionDetails(
       getJobs(client, connection.connectionId),
     ]);
 
-    let lastJobStatus = "none";
+    let lastJobStatus = null;
     let currentlyRunning = false;
     const runningStates = ["pending", "running"];
     const completedStates = ["failed", "succeeded", "cancelled"]; // TOOD: incomplete?

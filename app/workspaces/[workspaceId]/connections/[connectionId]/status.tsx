@@ -12,6 +12,8 @@ import {
 } from "../../../../../lib/api/connection";
 import { ScrollView, StyleSheet } from "react-native";
 import { View } from "react-native";
+import { StatusIcon } from "../../../../../lib/components/StatusIcon";
+import { ScheduleApiData } from "../../../../../lib/api/connections";
 
 export default function Status() {
   const connectionId = useLocalSearchParams().connectionId.toString();
@@ -32,6 +34,11 @@ export default function Status() {
 
   useFocusEffect(React.useCallback(refresh, []));
 
+  const connection = details?.connection;
+  const info = details?.info;
+  const source = details?.source;
+  const destination = details?.destination;
+
   return (
     <Container
       defaultTitle="Connection"
@@ -40,15 +47,12 @@ export default function Status() {
     >
       <ScrollView alwaysBounceVertical={true} alwaysBounceHorizontal={false}>
         <ListItem>
-          <ListItem.Content style={styles.topBar}>
-            <Icon
-              style={styles.badge}
-              reverse
-              {...Object.assign({}, getBadgeData(details), {
-                type: "font-awesome-5",
-                size: 18,
-              })}
-            />
+          <StatusIcon
+            connectionStatus={connection?.status}
+            jobStatus={info?.lastJobStatus}
+            currentlyRunning={info?.currentlyRunning}
+          />
+          <ListItem.Content>
             <View style={styles.enabledContainer}>
               <Text style={styles.enabledLabel}>
                 {enabled ? "Enabled" : "Disabled"}
@@ -69,7 +73,7 @@ export default function Status() {
         </ListItem>
         <ListItem bottomDivider>
           <ListItem.Content>
-            <Text style={styles.name}>{details?.connection?.name}</Text>
+            <Text style={styles.name}>{connection?.name}</Text>
           </ListItem.Content>
         </ListItem>
         <ListItem
@@ -79,10 +83,8 @@ export default function Status() {
           }}
         >
           <ListItem.Content>
-            <ListItem.Title>{details?.source?.name}</ListItem.Title>
-            <ListItem.Subtitle>
-              Source: {details?.source?.sourceType}
-            </ListItem.Subtitle>
+            <ListItem.Title>{source?.name}</ListItem.Title>
+            <ListItem.Subtitle>Source: {source?.sourceType}</ListItem.Subtitle>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
@@ -93,33 +95,32 @@ export default function Status() {
           }}
         >
           <ListItem.Content>
-            <ListItem.Title>{details?.destination?.name}</ListItem.Title>
+            <ListItem.Title>{destination?.name}</ListItem.Title>
             <ListItem.Subtitle>
-              Destination: {details?.destination?.destinationType}
+              Destination: {destination?.destinationType}
             </ListItem.Subtitle>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <ScheduleListItem details={details} />
+        <ScheduleListItem schedule={connection?.schedule} />
         <ListItem bottomDivider>
           <ListItem.Content>
             <View>
               <Text style={styles.textItem}>
-                Namespace Definition: {details?.connection?.namespaceDefinition}
+                Namespace Definition: {connection?.namespaceDefinition}
               </Text>
               <Text style={styles.textItem}>
-                Namespace Format: {details?.connection?.namespaceFormat}
+                Namespace Format: {connection?.namespaceFormat}
               </Text>
               <Text style={styles.textItem}>
-                Destination Stream Prefix:{" "}
-                {details?.connection?.prefix || "None"}
+                Destination Stream Prefix: {connection?.prefix || "None"}
               </Text>
               <Text style={styles.textItem}>
                 Non-breaking schema updates detected:{" "}
-                {details?.connection?.nonBreakingSchemaUpdatesBehavior}
+                {connection?.nonBreakingSchemaUpdatesBehavior}
               </Text>
               <Text style={styles.textItem}>
-                Data Residency: {details?.connection?.dataResidency}
+                Data Residency: {connection?.dataResidency}
               </Text>
             </View>
           </ListItem.Content>
@@ -129,8 +130,8 @@ export default function Status() {
   );
 }
 
-function ScheduleListItem({ details }: { details: ConnectionDetailData }) {
-  switch (details?.connection?.schedule?.scheduleType) {
+function ScheduleListItem({ schedule }: { schedule: ScheduleApiData }) {
+  switch (schedule?.scheduleType) {
     case "manual":
       return (
         <ListItem bottomDivider>
@@ -144,9 +145,7 @@ function ScheduleListItem({ details }: { details: ConnectionDetailData }) {
         <ListItem bottomDivider>
           <ListItem.Content>
             <ListItem.Title>Cron Schedule</ListItem.Title>
-            <ListItem.Subtitle>
-              {details?.connection?.schedule?.cronExpression}
-            </ListItem.Subtitle>
+            <ListItem.Subtitle>{schedule?.cronExpression}</ListItem.Subtitle>
           </ListItem.Content>
         </ListItem>
       );
@@ -155,9 +154,7 @@ function ScheduleListItem({ details }: { details: ConnectionDetailData }) {
         <ListItem bottomDivider>
           <ListItem.Content>
             <ListItem.Title>Basic Schedule</ListItem.Title>
-            <ListItem.Subtitle>
-              {details?.connection?.schedule?.basicTiming}
-            </ListItem.Subtitle>
+            <ListItem.Subtitle>{schedule?.basicTiming}</ListItem.Subtitle>
           </ListItem.Content>
         </ListItem>
       );
@@ -166,57 +163,10 @@ function ScheduleListItem({ details }: { details: ConnectionDetailData }) {
   }
 }
 
-function getBadgeData(details: ConnectionDetailData): {
-  name: string;
-  color: string;
-} {
-  const defaultData = {
-    name: "",
-    color: "#ffffff", // hidden
-  };
-  if (!details) {
-    return defaultData;
-  }
-  if (details.connection.status === "inactive") {
-    return {
-      name: "pause",
-      color: "#aaaaaa",
-    };
-  }
-  switch (details.info.lastJobStatus) {
-    case "succeeded":
-      return {
-        name: "check",
-        color: "#67dae1",
-      };
-    case "cancelled":
-      return {
-        name: "slash",
-        color: "#aaaaaa",
-      };
-    case "failed":
-      return {
-        name: "exclamation",
-        color: "#ff5e7b",
-      };
-    // case incomplete, none
-  }
-
-  // TODO: how to should info.currentlyRunning? Cloud shows a spinner around the icon
-  return defaultData;
-}
-
 const styles = StyleSheet.create({
   name: {
     fontSize: 24,
   },
-  topBar: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignSelf: "stretch",
-  },
-  badge: {},
   enabledContainer: {
     flex: 1,
     flexDirection: "row",
