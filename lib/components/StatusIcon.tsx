@@ -6,6 +6,7 @@ export type JobIconProps = {
   connectionStatus?: ConnectionApiStatus;
   jobStatus: JobApiStatus;
   currentlyRunning?: boolean;
+  size?: number;
 };
 
 export function StatusIcon(props: JobIconProps) {
@@ -14,7 +15,7 @@ export function StatusIcon(props: JobIconProps) {
       reverse
       {...Object.assign({}, getBadgeData(props), {
         type: "font-awesome-5",
-        size: 18,
+        size: props.size || 18,
       })}
     />
   );

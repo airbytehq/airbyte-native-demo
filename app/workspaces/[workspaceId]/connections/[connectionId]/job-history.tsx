@@ -9,9 +9,11 @@ import { useProgress } from "../../../../../lib/context/progress";
 import {
   ConnectionDetailData,
   getConnectionDetails,
+  JobApiData,
 } from "../../../../../lib/api/connection";
-import { ScrollView, StyleSheet } from "react-native";
+import { FlatList, ScrollView, StyleSheet } from "react-native";
 import { View } from "react-native";
+import { StatusIcon } from "../../../../../lib/components/StatusIcon";
 
 export default function Status() {
   const connectionId = useLocalSearchParams().connectionId.toString();
@@ -19,6 +21,7 @@ export default function Status() {
   const { currentUser } = useAuth();
   const { showActivity } = useProgress();
   const [details, setDetails] = useState<ConnectionDetailData>(undefined);
+  const tableData = details?.jobs;
 
   function refresh() {
     showActivity(true);
@@ -31,8 +34,78 @@ export default function Status() {
   useFocusEffect(React.useCallback(refresh, []));
 
   return (
-    <Container defaultTitle="Syncs">
-      <Text>Syncs: {connectionId}</Text>
+    <Container
+      defaultTitle="Syncs"
+      hasScroll={true}
+      loading={tableData === undefined}
+    >
+      <FlatList<JobApiData>
+        data={tableData || []}
+        keyExtractor={(item) => "" + item.jobId}
+        renderItem={({ item }) => <JobItem job={item} />}
+      />
     </Container>
   );
 }
+
+function JobItem({ job }: { job: JobApiData }) {
+  return (
+    <ListItem bottomDivider>
+      <StatusIcon jobStatus={job?.status} size={14} />
+      <ListItem.Content>
+        <ListItem.Title>{getTitle(job)}</ListItem.Title>
+        <ListItem.Subtitle>{getSubtitle(job)}</ListItem.Subtitle>
+      </ListItem.Content>
+    </ListItem>
+  );
+}
+
+function getSubtitle(job: JobApiData): string {
+  if (!job) return "";
+  const lines = [];
+  const info = [];
+  if (job.startTime) {
+    lines.push(job.startTime); // TODO: format
+  }
+  if (job.bytesSynced === 1) {
+    info.push(`${job.bytesSynced} byte`);
+  } else if (job.bytesSynced > 1) {
+    info.push(`${job.bytesSynced} bytes`);
+  }
+
+  if (job.rowsSynced === 1) {
+    info.push(`${job.rowsSynced} row`);
+  } else if (job.rowsSynced > 1) {
+    info.push(`${job.rowsSynced} rows`);
+  }
+  if (job.duration) {
+    info.push(`${job.duration}`); // TODO: Format ISO8601 duration like "PT33S" (for 33 seconds)
+  }
+
+  if (info.length > 0) {
+    lines.push(info.join(" | "));
+  }
+  return lines.join("\n");
+}
+
+function getTitle(job: JobApiData): string {
+  if (!job) return "";
+  const type = job.jobType === "reset" ? "Reset" : "Sync";
+  switch (job.status) {
+    // all types
+    case "failed":
+      return `${type} Failed`;
+    case "succeeded":
+      return `${type} Successful`;
+    case "running":
+      return `${type} Running`;
+    case "cancelled":
+      return `${type} Cancelled`;
+    case "pending":
+      return `${type} Pending`;
+  }
+
+  return "";
+}
+
+const styles = StyleSheet.create({});
