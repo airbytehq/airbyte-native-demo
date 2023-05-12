@@ -1,11 +1,5 @@
 import { AxiosInstance } from "axios";
-import {
-  ApiInput,
-  ApiResult,
-  CurrentUser,
-  getClient,
-  processError,
-} from "./client";
+import { ApiInput, ApiResult, getClient, processError } from "./client";
 import { ConnectionApiData } from "./connections";
 
 export interface SourceApiData {
@@ -40,7 +34,9 @@ export interface JobApiData {
 }
 
 export interface ConnectionCalculatedData {
+  enabled: boolean;
   lastJobStatus: string;
+  currentlyRunning: boolean;
 }
 
 export interface ConnectionDetailData {
@@ -72,8 +68,23 @@ export async function getConnectionDetails(
       getJobs(client, connection.connectionId),
     ]);
 
+    let lastJobStatus = "none";
+    let currentlyRunning = false;
+    const runningStates = ["pending", "running"];
+    const completedStates = ["failed", "succeeded", "cancelled"]; // TOOD: incomplete?
+    for (let i = 0; i < jobs.length; i++) {
+      if (runningStates.includes(jobs[i].status)) {
+        currentlyRunning = true;
+      } else if (completedStates.includes(jobs[i].status)) {
+        lastJobStatus = jobs[i].status;
+        break;
+      }
+    }
+
     const info: ConnectionCalculatedData = {
-      lastJobStatus: jobs.length > 0 ? jobs[0].status : "none",
+      enabled: connection.status === "active",
+      lastJobStatus,
+      currentlyRunning,
     };
 
     return { details: { connection, source, destination, jobs, info } };
