@@ -31,7 +31,18 @@ export default function Status() {
     });
   }
 
-  useFocusEffect(React.useCallback(refresh, []));
+  useFocusEffect(
+    React.useCallback(() => {
+      refresh();
+      const intervalId = setInterval(() => {
+        refresh();
+      }, 5000);
+
+      return () => {
+        clearInterval(intervalId);
+      };
+    }, [connectionId])
+  );
 
   return (
     <Container

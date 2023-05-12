@@ -32,7 +32,7 @@ export default function Status() {
     });
   }
 
-  useFocusEffect(React.useCallback(refresh, []));
+  useFocusEffect(React.useCallback(refresh, [connectionId]));
 
   const connection = details?.connection;
   const info = details?.info;
