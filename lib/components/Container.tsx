@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren } from "react";
 import { Text } from "@rneui/themed";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useProgress } from "../context/progress";

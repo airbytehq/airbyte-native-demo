@@ -13,13 +13,15 @@ export default function Index() {
   const { showActivity } = useProgress();
   const [tableData, setTableData] = useState<WorkspaceApiData[]>(undefined);
 
-  useEffect(() => {
+  function refresh() {
     showActivity(true);
     getWorkspaces({ currentUser }).then((response) => {
       setTableData(response.workspaces);
       showActivity(false);
     });
-  }, []);
+  }
+
+  useEffect(refresh, []);
 
   return (
     <Container

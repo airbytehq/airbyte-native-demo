@@ -2,7 +2,8 @@ import { Container } from "../../../../../lib/components/Container";
 import { Icon, Switch, Text } from "@rneui/themed";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ListItem } from "@rneui/themed";
-import { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "../../../../../lib/context/auth";
 import { useProgress } from "../../../../../lib/context/progress";
 import {
@@ -20,14 +21,16 @@ export default function Status() {
   const [details, setDetails] = useState<ConnectionDetailData>(undefined);
   const [enabled, setEnabled] = useState(details?.info?.enabled || false);
 
-  useEffect(() => {
+  function refresh() {
     showActivity(true);
     getConnectionDetails({ currentUser, connectionId }).then((response) => {
       setDetails(response.details);
       setEnabled(response.details.info.enabled);
       showActivity(false);
     });
-  }, []);
+  }
+
+  useFocusEffect(React.useCallback(refresh, []));
 
   return (
     <Container

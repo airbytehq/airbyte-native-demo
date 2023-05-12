@@ -18,13 +18,15 @@ export default function Connections() {
 
   const workspaceId = useLocalSearchParams().workspaceId.toString();
 
-  useEffect(() => {
+  function refresh() {
     showActivity(true);
     getConnections({ currentUser, workspaceId }).then((response) => {
       setTableData(response.connections);
       showActivity(false);
     });
-  }, []);
+  }
+
+  useEffect(refresh, []);
 
   return (
     <Container
