@@ -1,6 +1,7 @@
 import { Icon } from "@rneui/base";
-import { JobApiStatus } from "../api/connection";
+import { JobApiStatus, STATES_RUNNING } from "../api/connection";
 import { ConnectionApiStatus } from "../api/connections";
+import { ActivityIndicator } from "react-native";
 
 export type JobIconProps = {
   connectionStatus?: ConnectionApiStatus;
@@ -10,6 +11,9 @@ export type JobIconProps = {
 };
 
 export function StatusIcon(props: JobIconProps) {
+  // if (props.currentlyRunning || STATES_RUNNING.includes(props.jobStatus)) {
+  //   return <ActivityIndicator size="large" />;
+  // }
   return (
     <Icon
       reverse
@@ -37,6 +41,12 @@ function getBadgeData({
     return {
       name: "pause",
       color: "#aaaaaa",
+    };
+  }
+  if (currentlyRunning || STATES_RUNNING.includes(jobStatus)) {
+    return {
+      name: "spinner",
+      color: "#615eff",
     };
   }
   switch (jobStatus) {

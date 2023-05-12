@@ -23,10 +23,13 @@ export type JobApiStatus =
   | "failed"
   | "succeeded"
   | "cancelled";
+
+export type JobApiType = "sync" | "reset";
+
 export interface JobApiData {
   jobId: number;
   status: JobApiStatus;
-  jobType: "sync" | "reset";
+  jobType: JobApiType;
   startTime: string;
   lastUpdatedAt: string;
   duration: string;
@@ -55,6 +58,10 @@ export interface GetConnectionDetailsResult extends ApiResult {
   details?: ConnectionDetailData;
 }
 
+// TODO: what does "incomplete" mean?
+export const STATES_RUNNING = ["pending", "running"];
+export const STATES_COMPLETED = ["failed", "succeeded", "cancelled"];
+
 export async function getConnectionDetails(
   input: GetConnectionDetailsInput
 ): Promise<GetConnectionDetailsResult> {
@@ -71,14 +78,11 @@ export async function getConnectionDetails(
 
     let lastJobStatus = null;
     let currentlyRunning = false;
-    const runningStates = ["pending", "running"];
-    const completedStates = ["failed", "succeeded", "cancelled"]; // TOOD: incomplete?
     for (let i = 0; i < jobs.length; i++) {
-      if (runningStates.includes(jobs[i].status)) {
+      if (STATES_RUNNING.includes(jobs[i].status)) {
         currentlyRunning = true;
-      } else if (completedStates.includes(jobs[i].status)) {
-        lastJobStatus = jobs[i].status;
-        break;
+      } else if (STATES_COMPLETED.includes(jobs[i].status)) {
+        lastJobStatus = lastJobStatus || jobs[i].status;
       }
     }
 
