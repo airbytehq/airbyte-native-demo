@@ -1,5 +1,4 @@
 import { Container } from "../../../../../lib/components/Container";
-import { Icon, Switch, Text } from "@rneui/themed";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ListItem } from "@rneui/themed";
 import React, { useState } from "react";
@@ -12,8 +11,9 @@ import {
   JobApiData,
 } from "../../../../../lib/api/connection";
 import { FlatList, RefreshControl, ScrollView, StyleSheet } from "react-native";
-import { View } from "react-native";
 import { StatusIcon } from "../../../../../lib/components/StatusIcon";
+import { durationReadable } from "../../../../../lib/duration";
+import { bytesReadable, timeReadable } from "../../../../../lib/util";
 
 export default function Status() {
   const connectionId = useLocalSearchParams().connectionId.toString();
@@ -85,13 +85,13 @@ function getSubtitle(job: JobApiData): string {
   if (!job) return "";
   const lines = [];
   const info = [];
+
   if (job.startTime) {
-    lines.push(job.startTime); // TODO: format
+    lines.push(timeReadable(job.startTime));
   }
-  if (job.bytesSynced === 1) {
-    info.push(`${job.bytesSynced} byte`);
-  } else if (job.bytesSynced > 1) {
-    info.push(`${job.bytesSynced} bytes`);
+
+  if (job.bytesSynced) {
+    info.push(bytesReadable(job.bytesSynced));
   }
 
   if (job.rowsSynced === 1) {
@@ -99,8 +99,9 @@ function getSubtitle(job: JobApiData): string {
   } else if (job.rowsSynced > 1) {
     info.push(`${job.rowsSynced} rows`);
   }
+
   if (job.duration) {
-    info.push(`${job.duration}`); // TODO: Format ISO8601 duration like "PT33S" (for 33 seconds)
+    info.push(durationReadable(job.duration));
   }
 
   if (info.length > 0) {
