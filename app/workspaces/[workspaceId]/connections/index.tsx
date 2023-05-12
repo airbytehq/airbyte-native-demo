@@ -1,14 +1,14 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Container } from "../../../../lib/components/Container";
 import { ListItem } from "@rneui/themed";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../../lib/context/auth";
 import { useProgress } from "../../../../lib/context/progress";
 import {
   ConnectionApiData,
   getConnections,
 } from "../../../../lib/api/connections";
-import { FlatList } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 
 export default function Connections() {
   const { currentUser } = useAuth();
@@ -20,7 +20,7 @@ export default function Connections() {
 
   function refresh() {
     showActivity(true);
-    getConnections({ currentUser, workspaceId })
+    return getConnections({ currentUser, workspaceId })
       .then((response) => {
         setTableData(response.connections);
       })
@@ -28,8 +28,17 @@ export default function Connections() {
         showActivity(false);
       });
   }
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    refresh().finally(() => {
+      setRefreshing(false);
+    });
+  }, []);
 
-  useEffect(refresh, []);
+  useEffect(() => {
+    refresh();
+  }, []);
 
   return (
     <Container
@@ -40,6 +49,7 @@ export default function Connections() {
       <FlatList<ConnectionApiData>
         data={tableData || []}
         keyExtractor={(item) => item.connectionId}
+        refreshControl={<RefreshControl {...{ refreshing, onRefresh }} />}
         renderItem={({ item }) => (
           <ListItem
             bottomDivider

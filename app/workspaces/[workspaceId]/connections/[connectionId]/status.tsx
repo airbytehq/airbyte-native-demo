@@ -10,7 +10,7 @@ import {
   ConnectionDetailData,
   getConnectionDetails,
 } from "../../../../../lib/api/connection";
-import { ScrollView, StyleSheet } from "react-native";
+import { RefreshControl, ScrollView, StyleSheet } from "react-native";
 import { View } from "react-native";
 import { StatusIcon } from "../../../../../lib/components/StatusIcon";
 import { ScheduleApiData } from "../../../../../lib/api/connections";
@@ -25,7 +25,7 @@ export default function Status() {
 
   function refresh() {
     showActivity(true);
-    getConnectionDetails({ currentUser, connectionId })
+    return getConnectionDetails({ currentUser, connectionId })
       .then((response) => {
         setDetails(response.details);
         setEnabled(response.details.info.enabled);
@@ -34,8 +34,18 @@ export default function Status() {
         showActivity(false);
       });
   }
-
-  useFocusEffect(React.useCallback(refresh, [connectionId]));
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    refresh().finally(() => {
+      setRefreshing(false);
+    });
+  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      refresh();
+    }, [connectionId])
+  );
 
   const connection = details?.connection;
   const info = details?.info;
@@ -48,7 +58,11 @@ export default function Status() {
       loading={details === undefined}
       hasScroll={true}
     >
-      <ScrollView alwaysBounceVertical={true} alwaysBounceHorizontal={false}>
+      <ScrollView
+        alwaysBounceVertical={true}
+        alwaysBounceHorizontal={false}
+        refreshControl={<RefreshControl {...{ refreshing, onRefresh }} />}
+      >
         <ListItem>
           <StatusIcon
             connectionStatus={connection?.status}

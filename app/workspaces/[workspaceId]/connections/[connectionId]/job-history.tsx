@@ -20,7 +20,6 @@ export default function Status() {
 
   const { currentUser } = useAuth();
   const { showActivity } = useProgress();
-  const [refreshing, setRefreshing] = useState(false);
   const [details, setDetails] = useState<ConnectionDetailData>(undefined);
   const tableData = details?.jobs;
 
@@ -34,14 +33,13 @@ export default function Status() {
         showActivity(false);
       });
   }
-
+  const [refreshing, setRefreshing] = useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    refresh().then(() => {
+    refresh().finally(() => {
       setRefreshing(false);
     });
   }, []);
-
   useFocusEffect(
     React.useCallback(() => {
       refresh();
@@ -64,9 +62,7 @@ export default function Status() {
       <FlatList<JobApiData>
         data={tableData || []}
         keyExtractor={(item) => "" + item.jobId}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        refreshControl={<RefreshControl {...{ refreshing, onRefresh }} />}
         renderItem={({ item }) => <JobItem job={item} />}
       />
     </Container>

@@ -1,6 +1,6 @@
-import { FlatList } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import { useAuth } from "../../lib/context/auth";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { WorkspaceApiData, getWorkspaces } from "../../lib/api/workspaces";
 import { ListItem } from "@rneui/themed";
 import { Container } from "../../lib/components/Container";
@@ -15,7 +15,7 @@ export default function Index() {
 
   function refresh() {
     showActivity(true);
-    getWorkspaces({ currentUser })
+    return getWorkspaces({ currentUser })
       .then((response) => {
         setTableData(response.workspaces);
       })
@@ -23,8 +23,17 @@ export default function Index() {
         showActivity(false);
       });
   }
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    refresh().finally(() => {
+      setRefreshing(false);
+    });
+  }, []);
 
-  useEffect(refresh, []);
+  useEffect(() => {
+    refresh();
+  }, []);
 
   return (
     <Container
@@ -35,6 +44,7 @@ export default function Index() {
       <FlatList<WorkspaceApiData>
         data={tableData || []}
         keyExtractor={(item) => item.workspaceId}
+        refreshControl={<RefreshControl {...{ refreshing, onRefresh }} />}
         renderItem={({ item }) => (
           <ListItem
             bottomDivider
