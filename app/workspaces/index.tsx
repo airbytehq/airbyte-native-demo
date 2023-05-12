@@ -15,10 +15,13 @@ export default function Index() {
 
   function refresh() {
     showActivity(true);
-    getWorkspaces({ currentUser }).then((response) => {
-      setTableData(response.workspaces);
-      showActivity(false);
-    });
+    getWorkspaces({ currentUser })
+      .then((response) => {
+        setTableData(response.workspaces);
+      })
+      .finally(() => {
+        showActivity(false);
+      });
   }
 
   useEffect(refresh, []);

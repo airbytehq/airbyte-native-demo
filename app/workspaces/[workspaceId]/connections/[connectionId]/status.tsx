@@ -25,11 +25,14 @@ export default function Status() {
 
   function refresh() {
     showActivity(true);
-    getConnectionDetails({ currentUser, connectionId }).then((response) => {
-      setDetails(response.details);
-      setEnabled(response.details.info.enabled);
-      showActivity(false);
-    });
+    getConnectionDetails({ currentUser, connectionId })
+      .then((response) => {
+        setDetails(response.details);
+        setEnabled(response.details.info.enabled);
+      })
+      .finally(() => {
+        showActivity(false);
+      });
   }
 
   useFocusEffect(React.useCallback(refresh, [connectionId]));

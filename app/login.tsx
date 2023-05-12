@@ -18,14 +18,17 @@ export default function Login() {
     setProcessing(true);
     showActivity(true);
     setErrorMessage("");
-    const { user, error } = await checkAndStoreLogin(form);
-    if (user) {
-      signIn(user);
-    } else {
-      setErrorMessage(error?.message || "Problem logging in");
+    try {
+      const { user, error } = await checkAndStoreLogin(form);
+      if (user) {
+        signIn(user);
+      } else {
+        setErrorMessage(error?.message || "Problem logging in");
+      }
+    } finally {
+      showActivity(false);
+      setProcessing(false);
     }
-    showActivity(false);
-    setProcessing(false);
   }
 
   return (

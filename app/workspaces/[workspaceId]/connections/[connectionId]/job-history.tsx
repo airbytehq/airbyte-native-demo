@@ -11,7 +11,7 @@ import {
   getConnectionDetails,
   JobApiData,
 } from "../../../../../lib/api/connection";
-import { FlatList, ScrollView, StyleSheet } from "react-native";
+import { FlatList, RefreshControl, ScrollView, StyleSheet } from "react-native";
 import { View } from "react-native";
 import { StatusIcon } from "../../../../../lib/components/StatusIcon";
 
@@ -20,16 +20,27 @@ export default function Status() {
 
   const { currentUser } = useAuth();
   const { showActivity } = useProgress();
+  const [refreshing, setRefreshing] = useState(false);
   const [details, setDetails] = useState<ConnectionDetailData>(undefined);
   const tableData = details?.jobs;
 
   function refresh() {
     showActivity(true);
-    getConnectionDetails({ currentUser, connectionId }).then((response) => {
-      setDetails(response.details);
-      showActivity(false);
-    });
+    return getConnectionDetails({ currentUser, connectionId })
+      .then((response) => {
+        setDetails(response.details);
+      })
+      .finally(() => {
+        showActivity(false);
+      });
   }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    refresh().then(() => {
+      setRefreshing(false);
+    });
+  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -53,6 +64,9 @@ export default function Status() {
       <FlatList<JobApiData>
         data={tableData || []}
         keyExtractor={(item) => "" + item.jobId}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         renderItem={({ item }) => <JobItem job={item} />}
       />
     </Container>

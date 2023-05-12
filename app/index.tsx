@@ -14,12 +14,15 @@ export default function Index() {
   useEffect(() => {
     const autoLogin = async () => {
       showActivity(true);
-      const user = await autoloadOnStartup();
-      if (user) {
-        signIn(user);
+      try {
+        const user = await autoloadOnStartup();
+        if (user) {
+          signIn(user);
+        }
+        router.replace("/workspaces");
+      } finally {
+        showActivity(false);
       }
-      showActivity(false);
-      router.replace("/workspaces");
     };
     autoLogin();
   }, []);

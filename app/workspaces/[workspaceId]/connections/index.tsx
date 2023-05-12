@@ -20,10 +20,13 @@ export default function Connections() {
 
   function refresh() {
     showActivity(true);
-    getConnections({ currentUser, workspaceId }).then((response) => {
-      setTableData(response.connections);
-      showActivity(false);
-    });
+    getConnections({ currentUser, workspaceId })
+      .then((response) => {
+        setTableData(response.connections);
+      })
+      .finally(() => {
+        showActivity(false);
+      });
   }
 
   useEffect(refresh, []);

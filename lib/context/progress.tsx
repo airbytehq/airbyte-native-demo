@@ -14,16 +14,24 @@ export function useProgress() {
   return React.useContext(ProgressContext);
 }
 
+// this seems to work best to make sure there is truly a global count
+let globalCount = 0;
+
 export function ProgressProvider(props) {
-  const [progress, setProgress] = React.useState(false);
+  const [processing, setProcessing] = React.useState(globalCount > 0);
   return (
     <ProgressContext.Provider
       value={{
         showActivity: (processing: boolean) => {
-          // TODO: we could increment and decrement here
-          setProgress(processing);
+          if (processing) {
+            globalCount++;
+          } else {
+            globalCount--;
+            if (globalCount < 0) throw new Error("count less than zero!");
+          }
+          setProcessing(globalCount > 0);
         },
-        isProcessing: progress,
+        isProcessing: processing,
       }}
     >
       {props.children}
