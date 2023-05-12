@@ -1,4 +1,10 @@
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { PropsWithChildren } from "react";
 import { Text } from "@rneui/themed";
 import { Stack, useLocalSearchParams } from "expo-router";
@@ -19,7 +25,7 @@ export function Main(props: PropsWithChildren<ParentContainerProps>) {
   if (props.loading) {
     return (
       <View style={styles.loading}>
-        <Text>Loading</Text>
+        <ActivityIndicator size="large" />
       </View>
     );
   } else if (props.hasScroll || props.navigator) {
