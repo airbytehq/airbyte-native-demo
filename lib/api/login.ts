@@ -1,4 +1,4 @@
-import * as SecureStore from "expo-secure-store";
+import SecureStore from "../secureStore";
 import { getClient, ApiResult, CurrentUser, processError } from "./client";
 
 const SECURE_API_KEY = "apiKey";
