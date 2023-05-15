@@ -10,8 +10,6 @@ export default function Settings() {
       <Button style={styles.button} onPress={() => signOut()}>
         Sign Out
       </Button>
-      <Text>{currentUser?.apiKey}</Text>
-      <Text>{currentUser?.apiKey}</Text>
     </Container>
   );
 }
