@@ -7,6 +7,7 @@ export default function Settings() {
   const { signOut, currentUser } = useAuth();
   return (
     <Container defaultTitle="Settings">
+      <View style={styles.top}></View>
       <Button style={styles.button} onPress={() => signOut()}>
         Sign Out
       </Button>
@@ -16,6 +17,10 @@ export default function Settings() {
 
 const styles = StyleSheet.create({
   button: {
-    margin: 20,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  top: {
+    marginTop: 50,
   },
 });

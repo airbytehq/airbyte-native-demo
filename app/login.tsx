@@ -33,6 +33,7 @@ export default function Login() {
 
   return (
     <Container>
+      <View style={styles.top}></View>
       <Input
         placeholder="Airbyte API Key"
         leftIcon={{ type: "font-awesome-5", name: "sign-in-alt" }}
@@ -55,8 +56,11 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
+  top: {
+    marginTop: 50,
+  },
   errorMessage: {},
   button: {
-    marginTop: 20,
+    marginTop: 10,
   },
 });
