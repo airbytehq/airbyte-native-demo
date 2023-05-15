@@ -2,6 +2,7 @@
   "expo": {
     "name": "airbyte-native",
     "slug": "airbyte-native",
+    "owner": "airbyte",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,18 +17,25 @@
       "supportsTablet": true,
       "config": {
         "usesNonExemptEncryption": false
-      }
+      },
+      "bundleIdentifier": "com.brianab429.airbytenative"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.brianab429.airbytenative"
     },
     "scheme": "airbyte",
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "af2777dc-4e7f-4514-864a-698d20f0a8b8"
+      }
     }
   }
 }
