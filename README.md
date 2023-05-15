@@ -2,7 +2,9 @@
 
 React Native ([Expo](https://expo.dev/)) project to use the Airbyte Public API to make a native app.
 
-![Native App video](https://cdn.loom.com/sessions/thumbnails/1813f5b9175b4aec8b854f3cb9bf695a-with-play.gif)
+<a href="https://www.loom.com/share/1813f5b9175b4aec8b854f3cb9bf695a">
+  <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/1813f5b9175b4aec8b854f3cb9bf695a-with-play.gif">
+</a>
 
 Try it immediately on your phone with Expo Go.
 
