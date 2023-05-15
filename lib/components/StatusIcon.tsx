@@ -11,9 +11,9 @@ export type JobIconProps = {
 };
 
 export function StatusIcon(props: JobIconProps) {
-  // if (props.currentlyRunning || STATES_RUNNING.includes(props.jobStatus)) {
-  //   return <ActivityIndicator size="large" />;
-  // }
+  if (props.currentlyRunning || STATES_RUNNING.includes(props.jobStatus)) {
+    return <ActivityIndicator size="large" />;
+  }
   return (
     <Icon
       reverse
