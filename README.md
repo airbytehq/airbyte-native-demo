@@ -1,4 +1,4 @@
-# Airbtyte Native
+# Airbyte Native Demo
 
 React Native ([Expo](https://expo.dev/)) project to use the Airbyte Public API to make a native app.
 
